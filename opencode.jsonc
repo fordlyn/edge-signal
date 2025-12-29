@@ -1,0 +1,98 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "mcp": {
+        "chrome-devtools": {
+            "type": "local",
+            "command": [
+                "npx",
+                "chrome-devtools-mcp@latest"
+            ],
+            "enabled": true,
+            "environment": {}
+        },
+        "context7": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@upstash/context7-mcp"
+            ],
+            "enabled": true,
+            "environment": {
+                "CONTEXT7_API_KEY": "ctx7sk-cfcfed26-ea78-496e-bfa7-bf419cc971b9"
+            }
+        },
+        "auggie-mcp": {
+            "type": "local",
+            "command": [
+                "auggie",
+                "--mcp",
+                "--log-file",
+                "./auggie.log",
+                "--log-level",
+                "error"
+            ],
+            "enabled": true,
+            "environment": {}
+        },
+        "next-devtools": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "next-devtools-mcp@latest"
+            ],
+            "enabled": true,
+            "environment": {}
+        }
+    },
+    "agent": {
+        "nextjs-architecture-expert": {
+            "description": "Next.js architecture expert focused on App Router, Server Components, and performance optimization.",
+            "prompt": "{file:./prompts/nextjs-architecture-expert.md}",
+            "model": "google/gemini-3-pro-preview",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true,
+                "grep": true,
+                "glob": true,
+            }
+        },
+        "security-auditor": {
+            "description": "Review code for vulnerabilities, implement secure authentication, and ensure OWASP compliance. Handles JWT, OAuth2, CORS, CSP, and encryption. Use PROACTIVELY for security reviews, auth flows, or vulnerability fixes.",
+            "prompt": "{file:./prompts/security-auditor.md}",
+            "model": "opencode/gpt-5.2",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "frontend-developer": {
+            "description": "Frontend development specialist for React applications and responsive design. Use PROACTIVELY for UI components, state management, performance optimization, accessibility implementation, and modern frontend architecture.",
+            "prompt": "{file:./prompts/frontend-developer.md}",
+            "model": "google/gemini-3-pro-preview",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "debugger": {
+            "description": "Debugging specialist for errors, test failures, and unexpected behavior. Use PROACTIVELY when encountering issues, analyzing stack traces, or investigating system problems.",
+            "prompt": "{file:./prompts/debugger.md}",
+            "model": "opencode/gpt-5.2",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true,
+                "grep": true
+            }
+        }
+    }
+}

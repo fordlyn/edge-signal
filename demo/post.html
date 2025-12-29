@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件读取 // 生物发光花园</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+QingKe+HuangYou&family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-core: #03050d;
+            --bg-horizon: #0a0f24;
+            --bg-panel: rgba(4, 12, 24, 0.75);
+            --bg-panel-solid: #060e1c;
+            
+            --accent-cyan: #19f7ff;
+            --accent-magenta: #ff4fd8;
+            --accent-amber: #ffc857;
+            
+            --text-bright: #f4ffff;
+            --text-soft: #9fbcd6;
+            --text-muted: #5a7b9c;
+
+            --grid-line: rgba(25, 247, 255, 0.05);
+            
+            /* Typography Refined */
+            --font-display: 'Orbitron', 'ZCOOL QingKe HuangYou', sans-serif;
+            --font-body: 'Noto Sans SC', sans-serif;
+            --font-mono: 'Share Tech Mono', 'Noto Sans SC', monospace;
+            
+            --border-light: rgba(25, 247, 255, 0.2);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-core);
+            font-family: var(--font-body);
+            color: var(--text-bright);
+            line-height: 1.6;
+        }
+
+        /* --- Navbar (Reused) --- */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 70px;
+            background: rgba(3, 5, 13, 0.95);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .back-link::before { content: "«"; font-size: 1.2rem; }
+        .back-link:hover { text-decoration: underline; }
+
+        .file-id {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+        }
+
+        /* --- Main Layout --- */
+        .content-wrapper {
+            max-width: 800px;
+            margin: 100px auto 4rem;
+            padding: 0 1.5rem;
+        }
+
+        /* --- Article Header --- */
+        header.post-header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .tag {
+            background: rgba(25, 247, 255, 0.1);
+            color: var(--accent-cyan);
+            padding: 0.2rem 0.6rem;
+            font-size: 0.7rem;
+            border: 1px solid rgba(25, 247, 255, 0.2);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin: 0 0 1rem;
+            line-height: 1.2;
+            color: var(--text-bright);
+            text-shadow: 0 0 20px rgba(25, 247, 255, 0.2);
+        }
+
+        .post-info {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        /* --- Article Body --- */
+        .post-body {
+            font-size: 1.1rem;
+            color: var(--text-soft);
+        }
+
+        .post-body p {
+            margin-bottom: 1.8rem;
+        }
+
+        .post-body strong {
+            color: var(--text-bright);
+        }
+
+        .highlight-box {
+            background: rgba(255, 79, 216, 0.05);
+            border-left: 3px solid var(--accent-magenta);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: #ffccf0;
+        }
+
+        /* --- Terminal Code Block --- */
+        .code-terminal {
+            background: #080c15;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin: 2.5rem 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .terminal-header {
+            background: #111;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #555; }
+        .dot.r { background: #ff5f56; }
+        .dot.y { background: #ffbd2e; }
+        .dot.g { background: #27c93f; }
+
+        .terminal-body {
+            padding: 1.5rem;
+            color: #a5b3ce;
+            white-space: pre-wrap;
+        }
+        .cmd { color: var(--accent-cyan); }
+        .var { color: var(--accent-magenta); }
+
+        /* --- Footer --- */
+        .post-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        
+        .action-btn {
+            display: inline-block;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .action-btn:hover {
+            border-color: var(--accent-bright);
+            color: var(--text-bright);
+            background: rgba(255,255,255,0.05);
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="back-link">返回网格</a>
+        <span class="file-id">文件ID: 884-XJ</span>
+    </nav>
+
+    <article class="content-wrapper">
+        <header class="post-header">
+            <div class="meta-tags">
+                <span class="tag">第四扇区</span>
+                <span class="tag">生物危害</span>
+            </div>
+            <h1>第四扇区的生物发光花园</h1>
+            <div class="post-info">
+                <span>作者: Aris K. 博士</span>
+                <span>日期: 2084.11.05</span>
+                <span>加密等级: 低</span>
+            </div>
+        </header>
+
+        <div class="post-body">
+            <p><strong>日志条目 402：</strong> 我们已经成功突破了第四扇区废弃植物园的周边防线。辐射水平在可承受范围内，但视觉光谱被我只能描述为“超生长事件”的现象所淹没。</p>
+            
+            <p>这里的植物群不仅仅是幸存于紫外线泄漏，它们将其武器化了。蕨类植物发出有节奏的蓝光脉冲，似乎在干扰我们的短程通讯。每当光线达到峰值时，我们的音频频道就会充满听起来可疑像耳语的静电噪音。</p>
+
+            <div class="highlight-box">
+                "那不仅仅是光。那是数据。植物正在进行传输。"
+            </div>
+
+            <p>我们采集了生长在服务器机架上的苔藓样本。看起来有机物质已经与硅融合，创造了一种粗糙但功能正常的生物电路。</p>
+
+            <div class="code-terminal">
+                <div class="terminal-header">
+                    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                </div>
+                <div class="terminal-body">> 正在扫描样本_01...
+> 分子结构: 混合体
+> 硅含量: 14.5%
+> 检测到模式: 二进制序列
+> 正在解码...
+> 输出: "不要重启。我们正在做梦。"</div>
+            </div>
+
+            <p>我建议对样本进行全面隔离。如果这种生物数字融合具有传染性，我们不能冒险将其带回中央枢纽。我们将在这里建立前沿行动基地并继续观察。</p>
+            
+            <p>日志结束。</p>
+        </div>
+
+        <div class="post-footer">
+            <p>文件结束</p>
+            <a href="index.html" class="action-btn">关闭档案</a>
+        </div>
+    </article>
+
+</body>
+</html>

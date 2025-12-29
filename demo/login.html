@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接入 // 节点_01</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+QingKe+HuangYou&family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette - Shared across all pages */
+            --bg-core: #03050d;
+            --bg-horizon: #0a0f24;
+            --bg-panel: rgba(4, 12, 24, 0.85);
+            
+            --accent-cyan: #19f7ff;
+            --accent-cyan-dim: rgba(25, 247, 255, 0.2);
+            --accent-magenta: #ff4fd8;
+            --accent-amber: #ffc857;
+            
+            --text-bright: #f4ffff;
+            --text-soft: #9fbcd6;
+            --text-muted: #5a7b9c;
+
+            --grid-line: rgba(25, 247, 255, 0.05);
+            --scan-line: rgba(25, 247, 255, 0.03);
+            
+            /* Typography Refined */
+            --font-display: 'Orbitron', 'ZCOOL QingKe HuangYou', sans-serif;
+            --font-body: 'Noto Sans SC', sans-serif;
+            --font-mono: 'Share Tech Mono', 'Noto Sans SC', monospace;
+            
+            --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: var(--bg-core);
+            font-family: var(--font-body);
+            color: var(--text-bright);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: var(--bg-core);
+            font-family: var(--font-mono);
+            color: var(--text-bright);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        /* Ambient Background */
+        .grid-bg {
+            position: fixed;
+            inset: -50%;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: rotateX(60deg) translateY(0);
+            animation: grid-scroll 20s linear infinite;
+            z-index: -2;
+            mask-image: radial-gradient(circle at center, black 0%, transparent 60%);
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Access Panel */
+        .access-panel {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            padding: 3rem;
+            background: var(--bg-panel);
+            border: 1px solid var(--accent-cyan-dim);
+            /* Cyberpunk angled corners */
+            clip-path: polygon(
+                20px 0, 100% 0, 
+                100% calc(100% - 20px), calc(100% - 20px) 100%, 
+                0 100%, 0 20px
+            );
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: panel-intro 0.8s var(--ease-out-quart) forwards 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .access-panel::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            opacity: 0.5;
+        }
+
+        .panel-header {
+            margin-bottom: 2.5rem;
+            border-left: 2px solid var(--accent-magenta);
+            padding-left: 1rem;
+        }
+
+        .panel-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255, 79, 216, 0.4);
+        }
+
+        .panel-header .sub {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            letter-spacing: 0.2em;
+        }
+
+        /* Form Elements */
+        .input-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--text-muted);
+            color: var(--text-bright);
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .input-group input:focus,
+        .input-group input:valid {
+            border-bottom-color: var(--accent-cyan);
+            padding-left: 10px;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -1.2rem;
+            font-size: 0.7rem;
+            color: var(--accent-cyan);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: transparent;
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: var(--font-display);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            /* Angled button */
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-core);
+            box-shadow: 0 0 30px var(--accent-cyan-dim);
+        }
+
+        .submit-btn::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Decorative Scanline */
+        .scan-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, var(--scan-line) 50%, transparent);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        /* Footer Status */
+        .panel-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 1rem;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            margin-right: 5px;
+            box-shadow: 0 0 5px var(--accent-cyan);
+            animation: pulse 2s infinite;
+        }
+
+        .guest-link {
+            color: var(--text-soft);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .guest-link:hover { color: var(--accent-cyan); }
+
+        /* Keyframes */
+        @keyframes grid-scroll {
+            0% { transform: rotateX(60deg) translateY(0); }
+            100% { transform: rotateX(60deg) translateY(50px); }
+        }
+
+        @keyframes panel-intro {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Loading Overlay for transition */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-core);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .loader-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .loader-text {
+            font-family: var(--font-display);
+            letter-spacing: 0.3em;
+            margin-top: 1rem;
+            color: var(--accent-cyan);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+    <div class="noise-overlay"></div>
+    <div class="scan-overlay"></div>
+
+    <div class="access-panel">
+        <div class="panel-header">
+            <h1>身份验证</h1>
+            <span class="sub">// 安全层级 03 //</span>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="text" id="username" required autocomplete="off">
+                <label for="username">操作员 ID</label>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" required>
+                <label for="password">访问密钥</label>
+            </div>
+
+            <button type="submit" class="submit-btn">初始化链路</button>
+        </form>
+
+        <div class="panel-footer">
+            <div><span class="status-dot"></span>系统_在线</div>
+            <a href="index.html" class="guest-link">[ 访客通道 ]</a>
+        </div>
+    </div>
+
+    <!-- Transition Loader -->
+    <div class="loader-overlay" id="loader">
+        <div style="width: 200px; height: 2px; background: #333; position: relative; overflow: hidden;">
+            <div style="position: absolute; top:0; left:0; height: 100%; width: 50%; background: var(--accent-cyan); animation: load 1.5s infinite linear;"></div>
+        </div>
+        <div class="loader-text">正在建立上行连接...</div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const loader = document.getElementById('loader');
+            
+            // UI Feedback
+            btn.innerHTML = '正在校验...';
+            btn.style.opacity = '0.7';
+            
+            // Simulate Network Request
+            setTimeout(() => {
+                loader.classList.add('active');
+                
+                setTimeout(() => {
+                    // Redirect to home page
+                    window.location.href = 'index.html';
+                }, 1500);
+            }, 800);
+        });
+    </script>
+
+    <style>
+        @keyframes load {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,4 @@
+2025-12-27 23:23:14.464 [error] 'AugmentExtension': API request d69d202b-6e68-4b23-b9a9-e3bfa3c22c57 to https://d6.api.augmentcode.com/find-missing failed: The operation was aborted due to timeout
+2025-12-27 23:23:14.967 [error] 'AugmentExtension': API request 059650ac-e3a8-44e4-acdd-bbd21c9b2f4c to https://d6.api.augmentcode.com/report-error failed: The operation was aborted due to timeout
+2025-12-27 23:23:14.967 [error] 'AugmentExtension': Dropping error report "find-missing call failed with APIStatus unavailable" due to error: The operation was aborted due to timeout
+2025-12-27 23:49:52.848 [error] 'AugmentExtension': API request b35ba2c2-2ea0-49f0-b23d-586597931ab8 to https://d6.api.augmentcode.com/find-missing failed: The operation was aborted due to timeout

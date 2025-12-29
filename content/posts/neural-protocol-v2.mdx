@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "神经接口协议 v2.0",
+  date: "2084-11-05",
+  excerpt: "新一代神经接口协议在吞吐与隐匿性之间做了危险的折中。",
+  tags: ["协议_v2", "控制论", "AI"],
+  category: "研究",
+  source: "LAB_02",
+};
+
+# 神经接口协议 v2.0
+
+## 摘要
+
+<DataPanel
+  title="协议概览"
+  tone="cyan"
+  badge="SPEC"
+  index="03"
+  footer={{ left: "SRC: LAB_02", right: "TS: 2084-11-05" }}
+>
+  v2.0 的关键变化是“可变延迟握手”。它能绕开部分旧防火墙，但会引入新的侧信道。
+</DataPanel>
+
+<div className="flex flex-wrap gap-4 my-10">
+  <SystemMetric label="吞吐" value="+18%" note="相对 v1" accent="cyan" />
+  <SystemMetric label="隐匿" value="+7%" note="对旧网规则" accent="amber" />
+  <SystemMetric label="侧信道" value="HIGH" note="需隔离" accent="magenta" />
+</div>
+
+## 风险提示
+
+> 不要在未隔离的节点上直接部署。
+
+```bash
+# 推荐：在隔离环境中验证
+npm run build
+```
+
+<SignalAlert variant="danger" title="部署禁令">
+  未完成隔离审计前，禁止将 v2.0 推送至公网节点。
+</SignalAlert>

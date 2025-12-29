@@ -1,0 +1,151 @@
+export const metadata = {
+  title: "MDX 样式验收清单",
+  date: "2084-12-31",
+  excerpt: "用于验收 Neon Broadcast 的 MD/MDX 排版、引用、终端块、面板组件与图片渲染。",
+  tags: ["样式", "协议_v2", "霓虹"],
+  category: "研究",
+  source: "OPS_QA",
+};
+
+# MDX 样式验收清单
+
+> 目标：让每一篇文章既像“终端日志”，又像“情报简报”。
+
+<DataPanel
+  title="验收范围"
+  tone="cyan"
+  badge="QA"
+  index="00"
+  footer={{ left: "SRC: OPS_QA", right: "TS: 2084-12-31" }}
+>
+  本文覆盖：标题层级、段落、强调、链接、列表、分割线、引用块、代码块、图片，以及自定义组件。
+</DataPanel>
+
+## 1. 排版 / Typography
+
+这一段是普通正文，用于验证行高与字号。
+
+- **加粗**：用于强调关键词
+- *斜体*：用于语气或术语
+- `inline code`：用于参数名、命令名
+
+内链示例：跳回首页 `/` 或访问归档 `/archive`。
+
+外链示例：访问 https://nextjs.org/docs
+
+---
+
+## 2. DataPanel（情报块）
+
+<DataPanel
+  title="系统摘要"
+  tone="amber"
+  badge="BRIEF"
+  index="01"
+  footer={{ left: "CLASS: PUBLIC", right: "STATUS: STABLE" }}
+>
+  这里适合放“结论先行”的内容，比如：背景、目标、结果。
+
+  也支持多段文字，以及 Markdown 列表：
+  - 节点：ONLINE
+  - 带宽：42.8 THz
+  - 噪声：LOW
+</DataPanel>
+
+<DataPanel
+  title="交叉验证"
+  tone="magenta"
+  badge="XREF"
+  index="02"
+  footer={{ left: "REF: /tags/控制论", right: "RISK: MED" }}
+>
+  建议在这类面板里放：风险、警告、未知项。
+</DataPanel>
+
+## 3. SystemMetric（指标卡）
+
+<div className="flex flex-wrap gap-4 my-10">
+  <SystemMetric label="Build" value="PASS" note="next build" accent="cyan" />
+  <SystemMetric label="Routes" value="34" unit="paths" note="SSG/Static" accent="amber" />
+  <SystemMetric label="Risk" value="LOW" note="no DB" accent="magenta" />
+</div>
+
+## 4. SignalAlert（告警/提示）
+
+<SignalAlert variant="info" title="信息提示">
+  这是一条信息提示，用于给读者说明背景或上下文。
+</SignalAlert>
+
+<SignalAlert variant="warning" title="警告">
+  这是一条警告提示，用于说明可能的风险。
+</SignalAlert>
+
+<SignalAlert variant="danger" title="危险">
+  这是一条危险提示，用于强调“不要这样做”。
+</SignalAlert>
+
+## 5. `>` 引用块（SignalQuote 自动美化）
+
+> 这是一段引用，用于验证 `>` 语法是否自动渲染为引用面板。
+>
+> 第二段引用：同一块内的多段落处理。
+
+## 6. 代码块（TerminalBlock 自动美化）
+
+```bash
+# 语言标识 bash
+npm run dev
+npm run build
+```
+
+```txt
+# txt: 用于日志
+[2084-12-31 00:00:00] OPS_QA :: SIGNAL_OK
+```
+
+## 7. 列表（ul/ol）
+
+无序列表：
+- 项目 A
+- 项目 B
+- 项目 C
+
+有序列表：
+1. Step 1
+2. Step 2
+3. Step 3
+
+## 8. 图片（HoloImage 自动美化）
+
+![Neon Broadcast Asset](/next.svg)
+
+<DataPanel
+  title="图片说明"
+  tone="cyan"
+  badge="MEDIA"
+  index="08"
+  footer={{ left: "ASSET: /next.svg", right: "RENDER: HOLO" }}
+>
+  上面这张图片使用 Markdown `![]()` 引入，应自动应用 `HoloImage` 的全息框、扫描线叠层与 caption 区域（caption 可选）。
+</DataPanel>
+
+## 9. 组合测试（中间风格）
+
+<DataPanel
+  title="组合示例"
+  tone="cyan"
+  badge="MIX"
+  index="09"
+  footer={{ left: "SRC: NODE_77", right: "LINK: ACTIVE" }}
+>
+  > 面板内部也可以嵌引用（用于验证嵌套情况下的边距与可读性）。
+
+  ```txt
+  > nested terminal
+  > OK
+  ```
+
+  <SignalAlert variant="warning" title="嵌套提示">
+    这是嵌套在 DataPanel 内的告警组件。
+  </SignalAlert>
+</DataPanel>

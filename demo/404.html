@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 // 信号丢失</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+QingKe+HuangYou&family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-core: #03050d;
+            --accent-red: #ff3c3c;
+            --accent-cyan: #19f7ff;
+            --text-bright: #f4ffff;
+            /* Typography Refined */
+            --font-display: 'Orbitron', 'ZCOOL QingKe HuangYou', sans-serif;
+            --font-body: 'Noto Sans SC', sans-serif;
+            --font-mono: 'Share Tech Mono', 'Noto Sans SC', monospace;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: var(--bg-core);
+            color: var(--text-bright);
+            font-family: var(--font-body);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Glitch Effect */
+        .glitch-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .error-code {
+            font-family: var(--font-display);
+            font-size: 8rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--accent-red);
+            text-shadow: 2px 2px 0px var(--accent-cyan);
+            position: relative;
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+
+        .error-code::before, .error-code::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .error-code::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .error-code::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+            color: #888;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+        .message span { color: var(--accent-red); }
+
+        .scan-line {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background-color: rgba(255, 60, 60, 0.5);
+            opacity: 0.5;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+        }
+
+        .btn-return {
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 0.2rem;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-return:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 30px rgba(25, 247, 255, 0.4);
+        }
+
+        @keyframes scan {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(38px, 9999px, 81px, 0); }
+            20% { clip: rect(6px, 9999px, 63px, 0); }
+            40% { clip: rect(55px, 9999px, 12px, 0); }
+            60% { clip: rect(18px, 9999px, 86px, 0); }
+            80% { clip: rect(72px, 9999px, 35px, 0); }
+            100% { clip: rect(11px, 9999px, 94px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(69px, 9999px, 36px, 0); }
+            20% { clip: rect(4px, 9999px, 7px, 0); }
+            40% { clip: rect(31px, 9999px, 20px, 0); }
+            60% { clip: rect(85px, 9999px, 60px, 0); }
+            80% { clip: rect(10px, 9999px, 3px, 0); }
+            100% { clip: rect(54px, 9999px, 99px, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scan-line"></div>
+
+    <div class="glitch-wrapper">
+        <div class="error-code" data-text="404">404</div>
+    </div>
+
+    <div class="message">
+        // 严重错误: 节点 <span>未找到</span><br>
+        目标坐标无效
+    </div>
+
+    <a href="index.html" class="btn-return">重新建立上行链路</a>
+
+</body>
+</html>
