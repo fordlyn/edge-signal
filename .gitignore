@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# AI Assistant Tools
+.codex/
+.opencode/
+auggie.log
+
+# Local development
+.envrc
