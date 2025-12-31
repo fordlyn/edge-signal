@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "测试自动部署",
+  date: "2025-12-31",
+  excerpt: "验证 GitHub → Vercel 自动部署工作流是否正常运行",
+  tags: ["测试", "DevOps"],
+  category: "测试",
+  source: "本地终端",
+};
+
+# 测试自动部署
+
+<DataPanel
+  title="部署测试"
+  tone="cyan"
+  badge="TEST"
+  index="01"
+  footer={{ left: "SRC: 本地", right: "TS: 2025-12-31" }}
+>
+  这是一篇测试文章，用于验证以下工作流：
+
+  1. 本地创建 MDX 文件
+  2. Git 提交并推送到 GitHub
+  3. Vercel 自动检测变更
+  4. 触发构建和部署
+  5. 新文章自动上线
+</DataPanel>
+
+## 工作流验证
+
+如果你能在生产环境看到这篇文章，说明自动化部署已成功配置！
+
+<SignalAlert type="success">
+  ✓ GitHub 连接正常
+  ✓ Vercel 自动部署已激活
+  ✓ MDX 编译成功
+</SignalAlert>
+
+## 下一步
+
+你现在可以：
+- 在本地编辑 `.mdx` 文件
+- 使用任何 Markdown 编辑器
+- `git push` 后等待 1-2 分钟
+- 新内容自动发布到全球 CDN
+
+<TerminalBlock>
+$ git add content/posts/new-article.mdx
+$ git commit -m "新增文章: XXX"
+$ git push origin main
+# Vercel 自动部署中...
+</TerminalBlock>
