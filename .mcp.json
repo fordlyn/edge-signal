@@ -1,0 +1,23 @@
+{
+    "mcpServers": {
+        "auggie-mcp": {
+            "type": "stdio",
+            "command": "auggie",
+            "args": [
+                "--mcp",
+                "--log-file",
+                "./auggie.log",
+                "--log-level",
+                "error"
+            ]
+        },
+        "next-devtools": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "next-devtools-mcp@latest"
+            ]
+        }
+    }
+}
